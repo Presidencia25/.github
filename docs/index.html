@@ -470,7 +470,7 @@
 
     <!-- Disclaimer -->
     <div class="disclaimer">
-      ⚠️ <strong>Estimación orientativa.</strong> Este resultado se basa en los tipos y deducciones generales del IRPF y la Seguridad Social para 2025. No tiene en cuenta deducciones autonómicas específicas, rendimientos del capital, movilidad reducida, pensiones compensatorias ni otras circunstancias particulares. Para una liquidación exacta, consulta a un asesor fiscal o utiliza el servicio Renta Web de la <a href="https://sede.agenciatributaria.gob.es" target="_blank" rel="noopener">Agencia Tributaria</a>.
+      ⚠️ <strong>Estimación orientativa.</strong> Este resultado se basa en los tipos y deducciones generales del IRPF y la Seguridad Social para 2025. No tiene en cuenta deducciones autonómicas específicas, rendimientos del capital, movilidad reducida, pensiones compensatorias ni otras circunstancias particulares. Para una liquidación exacta, consulta a un asesor fiscal o utiliza el servicio Renta Web de la <a href="https://sede.agenciatributaria.gob.es" target="_blank" rel="noopener noreferrer">Agencia Tributaria</a>.
     </div>
 
   </div>
@@ -479,16 +479,18 @@
 
 <footer>
   <p>Datos basados en la normativa tributaria y de cotizaciones vigente para el ejercicio 2025 en España.</p>
-  <p style="margin-top:4px;">Código abierto · <a href="https://github.com/Presidencia25/.github" target="_blank" rel="noopener">Presidencia25 en GitHub</a></p>
+  <p style="margin-top:4px;">Código abierto · <a href="https://github.com/Presidencia25/.github" target="_blank" rel="noopener noreferrer">Presidencia25 en GitHub</a></p>
 </footer>
 
 <script>
 /* ─────────────────────────────────────────────
    CONSTANTS 2025
 ───────────────────────────────────────────── */
-const SS_RATE = 0.0635;       // employee contribution: 4.70 CC + 1.55 desempleo + 0.10 formación
-const SS_MAX_BASE = 56646;    // annual cap (4,720.50 €/month × 12)
-const SS_MIN_BASE = 15876;    // annual min base (1,323 €/month × 12)
+const SS_RATE = 0.0635;              // employee contribution: 4.70 CC + 1.55 desempleo + 0.10 formación
+const SS_MAX_MONTHLY = 4720.50;
+const SS_MAX_BASE = SS_MAX_MONTHLY * 12;   // 56,646 €/year
+const SS_MIN_MONTHLY = 1323;
+const SS_MIN_BASE = SS_MIN_MONTHLY * 12;   // 15,876 €/year
 
 // Combined state + average regional IRPF scale (2025)
 const IRPF_BRACKETS = [
