@@ -1,4 +1,4 @@
-# 🇲🇽 Presidencia25
+# Presidencia25
 
 > **Apps and AI for civic service and public service at the highest level.**
 
