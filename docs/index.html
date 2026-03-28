@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Calcula tu salario neto en España para 2025. Descubre cuánto cobrarás después de IRPF y Seguridad Social, con desglose mensual y anual." />
+  <meta property="og:title" content="Calculadora de Salario Neto 2025 — España" />
+  <meta property="og:description" content="Herramienta gratuita para calcular tu salario neto, IRPF y Seguridad Social en España." />
+  <meta property="og:type" content="website" />
+  <title>Calculadora de Salario Neto 2025 — España</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --red:    #c60b1e;
+      --yellow: #ffc400;
+      --dark:   #1a1a2e;
+      --mid:    #2d2d44;
+      --card:   #ffffff;
+      --text:   #1a1a2e;
+      --muted:  #6b7280;
+      --border: #e5e7eb;
+      --radius: 12px;
+      --shadow: 0 4px 24px rgba(0,0,0,.08);
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: #f3f4f6;
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    header {
+      background: var(--dark);
+      color: #fff;
+      padding: 0;
+    }
+    .header-flag {
+      height: 6px;
+      background: linear-gradient(to right, var(--red) 28%, var(--yellow) 28% 72%, var(--red) 72%);
+    }
+    .header-inner {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 28px 20px 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .flag-icon {
+      font-size: 2.2rem;
+      line-height: 1;
+    }
+    .header-text h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: -.3px;
+    }
+    .header-text p {
+      font-size: .875rem;
+      color: #9ca3af;
+      margin-top: 2px;
+    }
+
+    /* ── Main layout ── */
+    main {
+      max-width: 800px;
+      margin: 32px auto;
+      padding: 0 16px 60px;
+      display: grid;
+      gap: 20px;
+    }
+
+    /* ── Card ── */
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 28px;
+    }
+    .card-title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .card-title::before {
+      content: '';
+      display: inline-block;
+      width: 4px;
+      height: 18px;
+      background: var(--red);
+      border-radius: 4px;
+    }
+
+    /* ── Form ── */
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+    }
+    .field { display: flex; flex-direction: column; gap: 6px; }
+    label {
+      font-size: .82rem;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .5px;
+    }
+    input[type="number"],
+    select {
+      padding: 11px 14px;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      font-size: 1rem;
+      color: var(--text);
+      background: #fff;
+      transition: border-color .15s;
+      width: 100%;
+      -moz-appearance: textfield;
+    }
+    input[type="number"]:focus,
+    select:focus {
+      outline: none;
+      border-color: var(--red);
+    }
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
+
+    .input-wrap { position: relative; }
+    .input-wrap .currency {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      font-size: .9rem;
+      pointer-events: none;
+    }
+
+    .range-group { display: flex; align-items: center; gap: 12px; }
+    input[type="range"] {
+      flex: 1;
+      accent-color: var(--red);
+      cursor: pointer;
+    }
+    .range-val {
+      min-width: 70px;
+      text-align: right;
+      font-weight: 700;
+      font-size: 1rem;
+    }
+
+    .btn-calc {
+      margin-top: 8px;
+      padding: 14px 28px;
+      background: var(--red);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      width: 100%;
+      transition: background .15s, transform .1s;
+    }
+    .btn-calc:hover { background: #a00818; }
+    .btn-calc:active { transform: scale(.98); }
+
+    /* ── Result boxes ── */
+    .results-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 14px;
+    }
+    .result-box {
+      border-radius: 10px;
+      padding: 18px;
+      text-align: center;
+    }
+    .result-box.primary {
+      background: var(--red);
+      color: #fff;
+    }
+    .result-box.secondary {
+      background: #fef3c7;
+      color: #92400e;
+    }
+    .result-box.neutral {
+      background: #f3f4f6;
+      color: var(--text);
+    }
+    .result-box .amount {
+      font-size: 1.6rem;
+      font-weight: 800;
+      letter-spacing: -.5px;
+      line-height: 1.1;
+    }
+    .result-box .label {
+      font-size: .75rem;
+      font-weight: 600;
+      opacity: .75;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      margin-top: 6px;
+    }
+
+    /* ── Breakdown bar ── */
+    .breakdown-bar {
+      height: 28px;
+      border-radius: 8px;
+      overflow: hidden;
+      display: flex;
+      margin-bottom: 16px;
+    }
+    .bar-seg { transition: width .5s ease; }
+    .bar-seg.net    { background: var(--red); }
+    .bar-seg.ss     { background: var(--yellow); }
+    .bar-seg.irpf   { background: #6b7280; }
+
+    .breakdown-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: .875rem;
+    }
+    .legend-dot {
+      width: 12px; height: 12px;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+    .legend-dot.net  { background: var(--red); }
+    .legend-dot.ss   { background: var(--yellow); }
+    .legend-dot.irpf { background: #6b7280; }
+
+    /* ── Table ── */
+    .breakdown-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .9rem;
+    }
+    .breakdown-table th {
+      text-align: left;
+      padding: 8px 12px;
+      font-size: .75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      color: var(--muted);
+      border-bottom: 2px solid var(--border);
+    }
+    .breakdown-table th:not(:first-child) { text-align: right; }
+    .breakdown-table td {
+      padding: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .breakdown-table td:not(:first-child) { text-align: right; }
+    .breakdown-table tr:last-child td { border-bottom: none; }
+    .breakdown-table .row-total td {
+      font-weight: 700;
+      background: #f9fafb;
+      border-top: 2px solid var(--border);
+    }
+    .breakdown-table .row-net td {
+      font-weight: 800;
+      color: var(--red);
+      font-size: 1rem;
+    }
+    .tag {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 20px;
+      font-size: .72rem;
+      font-weight: 600;
+    }
+    .tag.deduct { background: #fee2e2; color: #b91c1c; }
+    .tag.income { background: #dcfce7; color: #166534; }
+
+    /* ── IRPF Brackets table ── */
+    .brackets-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .85rem;
+    }
+    .brackets-table th {
+      text-align: left;
+      padding: 7px 10px;
+      font-size: .72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      color: var(--muted);
+      border-bottom: 2px solid var(--border);
+    }
+    .brackets-table td {
+      padding: 9px 10px;
+      border-bottom: 1px solid var(--border);
+    }
+    .brackets-table tr:last-child td { border-bottom: none; }
+    .brackets-table .active-row { background: #fef2f2; font-weight: 600; }
+    .rate-pill {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 20px;
+      font-weight: 700;
+      background: #f3f4f6;
+      font-size: .82rem;
+    }
+    .rate-pill.active { background: var(--red); color: #fff; }
+
+    /* ── Disclaimer ── */
+    .disclaimer {
+      font-size: .78rem;
+      color: var(--muted);
+      line-height: 1.5;
+      padding: 14px;
+      background: #f9fafb;
+      border-radius: 8px;
+      border-left: 3px solid var(--yellow);
+    }
+
+    /* ── Hidden state ── */
+    .results-section { display: none; }
+    .results-section.visible { display: grid; gap: 20px; }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      font-size: .78rem;
+      color: var(--muted);
+      padding: 0 16px 32px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    footer a { color: var(--red); text-decoration: none; }
+
+    @media (max-width: 480px) {
+      .header-inner { padding: 20px 16px 18px; }
+      .header-text h1 { font-size: 1.25rem; }
+      .card { padding: 20px; }
+      .result-box .amount { font-size: 1.35rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-flag"></div>
+  <div class="header-inner">
+    <div class="flag-icon">🇪🇸</div>
+    <div class="header-text">
+      <h1>Calculadora de Salario Neto 2025</h1>
+      <p>IRPF · Seguridad Social · Salario neto mensual y anual</p>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- Input card -->
+  <div class="card">
+    <div class="card-title">Introduce tus datos</div>
+    <div class="form-grid">
+
+      <div class="field" style="grid-column: 1/-1;">
+        <label>Salario bruto anual</label>
+        <div class="range-group">
+          <input type="range" id="salaryRange" min="12000" max="150000" step="500" value="30000" />
+          <span class="range-val" id="rangeLabel">30.000 €</span>
+        </div>
+        <div class="input-wrap" style="margin-top:8px;">
+          <input type="number" id="salaryInput" value="30000" min="0" max="9999999" placeholder="Ej: 30000" />
+          <span class="currency">€/año</span>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Pagas al año</label>
+        <select id="pagas">
+          <option value="12">12 pagas</option>
+          <option value="14" selected>14 pagas (+ extras)</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Situación personal</label>
+        <select id="situacion">
+          <option value="single">Soltero/a sin hijos</option>
+          <option value="single1">Soltero/a, 1 hijo</option>
+          <option value="single2">Soltero/a, 2 hijos</option>
+          <option value="married">Casado/a, tributación conjunta</option>
+          <option value="married1">Casado/a, 1 hijo</option>
+          <option value="married2">Casado/a, 2 hijos</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Comunidad Autónoma</label>
+        <select id="ccaa">
+          <option value="avg">Media nacional</option>
+          <option value="and">Andalucía</option>
+          <option value="ara">Aragón</option>
+          <option value="ast">Asturias</option>
+          <option value="bal">Baleares</option>
+          <option value="can">Canarias</option>
+          <option value="cant">Cantabria</option>
+          <option value="clm">Castilla-La Mancha</option>
+          <option value="cyl">Castilla y León</option>
+          <option value="cat">Cataluña</option>
+          <option value="ext">Extremadura</option>
+          <option value="gal">Galicia</option>
+          <option value="rio">La Rioja</option>
+          <option value="mad">Madrid</option>
+          <option value="mur">Murcia</option>
+          <option value="nav">Navarra</option>
+          <option value="pv">País Vasco</option>
+          <option value="val">C. Valenciana</option>
+        </select>
+      </div>
+
+    </div>
+    <button class="btn-calc" id="calcBtn" onclick="calculate()">Calcular salario neto</button>
+  </div>
+
+  <!-- Results (hidden until calculation) -->
+  <div class="results-section" id="resultsSection">
+
+    <!-- Summary boxes -->
+    <div class="card">
+      <div class="card-title">Resumen</div>
+      <div class="results-grid" id="summaryGrid"></div>
+    </div>
+
+    <!-- Visual bar -->
+    <div class="card">
+      <div class="card-title">Distribución de tu salario bruto</div>
+      <div class="breakdown-bar" id="breakdownBar">
+        <div class="bar-seg net"  id="barNet"  style="width:0%"></div>
+        <div class="bar-seg irpf" id="barIrpf" style="width:0%"></div>
+        <div class="bar-seg ss"   id="barSS"   style="width:0%"></div>
+      </div>
+      <div class="breakdown-legend">
+        <div class="legend-item"><div class="legend-dot net"></div><span id="legNet">Salario neto</span></div>
+        <div class="legend-item"><div class="legend-dot irpf"></div><span id="legIrpf">IRPF</span></div>
+        <div class="legend-item"><div class="legend-dot ss"></div><span id="legSS">Seguridad Social</span></div>
+      </div>
+    </div>
+
+    <!-- Detailed table -->
+    <div class="card">
+      <div class="card-title">Desglose detallado</div>
+      <table class="breakdown-table" id="detailTable"></table>
+    </div>
+
+    <!-- IRPF brackets -->
+    <div class="card">
+      <div class="card-title">Tramos del IRPF aplicados</div>
+      <table class="brackets-table" id="bracketsTable"></table>
+      <p style="font-size:.78rem;color:var(--muted);margin-top:12px;">* Escala estatal + autonómica combinada (tramos 2025)</p>
+    </div>
+
+    <!-- Disclaimer -->
+    <div class="disclaimer">
+      ⚠️ <strong>Estimación orientativa.</strong> Este resultado se basa en los tipos y deducciones generales del IRPF y la Seguridad Social para 2025. No tiene en cuenta deducciones autonómicas específicas, rendimientos del capital, movilidad reducida, pensiones compensatorias ni otras circunstancias particulares. Para una liquidación exacta, consulta a un asesor fiscal o utiliza el servicio Renta Web de la <a href="https://sede.agenciatributaria.gob.es" target="_blank" rel="noopener noreferrer">Agencia Tributaria</a>.
+    </div>
+
+  </div>
+
+</main>
+
+<footer>
+  <p>Datos basados en la normativa tributaria y de cotizaciones vigente para el ejercicio 2025 en España.</p>
+  <p style="margin-top:4px;">Código abierto · <a href="https://github.com/Presidencia25/.github" target="_blank" rel="noopener noreferrer">Presidencia25 en GitHub</a></p>
+</footer>
+
+<script>
+/* ─────────────────────────────────────────────
+   CONSTANTS 2025
+───────────────────────────────────────────── */
+const SS_RATE = 0.0635;              // employee contribution: 4.70 CC + 1.55 desempleo + 0.10 formación
+const SS_MAX_MONTHLY = 4720.50;
+const SS_MAX_BASE = SS_MAX_MONTHLY * 12;   // 56,646 €/year
+const SS_MIN_MONTHLY = 1323;
+const SS_MIN_BASE = SS_MIN_MONTHLY * 12;   // 15,876 €/year
+
+// Combined state + average regional IRPF scale (2025)
+const IRPF_BRACKETS = [
+  { up: 12450,   rate: 0.19 },
+  { up: 20200,   rate: 0.24 },
+  { up: 35200,   rate: 0.30 },
+  { up: 60000,   rate: 0.37 },
+  { up: 300000,  rate: 0.45 },
+  { up: Infinity, rate: 0.47 },
+];
+
+// Personal minimum (mínimo del contribuyente) by situation
+const PERSONAL_MIN = {
+  single:  5550,
+  single1: 5550 + 2400,          // +1 hijo: 2,400 €
+  single2: 5550 + 2400 + 2700,   // +2 hijos: 2,400 + 2,700 €
+  married: 5550 + 3400,          // conjunta: +3,400 €
+  married1: 5550 + 3400 + 2400,
+  married2: 5550 + 3400 + 2400 + 2700,
+};
+
+// Regional IRPF offset (% adjustment to final tax)
+// Approximated from published effective rates
+const CCAA_ADJ = {
+  avg: 0,     and: -0.01, ara: 0.005, ast: 0.03, bal: 0.02,
+  can: -0.03, cant: 0.01, clm: -0.005, cyl: 0,  cat: 0.04,
+  ext: 0.005, gal: -0.005, rio: -0.02, mad: -0.04, mur: 0.01,
+  nav: -0.01, pv: -0.03, val: 0.025,
+};
+
+// Reducción por rendimientos del trabajo (Art. 20 LIRPF)
+function workReduction(net) {
+  if (net <= 13115) return 5565;
+  if (net <= 16825) return 5565 - 1.5 * (net - 13115);
+  return 0;
+}
+
+/* ─────────────────────────────────────────────
+   TAX CALCULATION
+───────────────────────────────────────────── */
+function calcIRPF(taxBase, situation, ccaa) {
+  if (taxBase <= 0) return 0;
+
+  // Progressive tax on income
+  let tax = 0;
+  let prev = 0;
+  for (const b of IRPF_BRACKETS) {
+    if (taxBase <= prev) break;
+    const chunk = Math.min(taxBase, b.up) - prev;
+    tax += chunk * b.rate;
+    prev = b.up;
+  }
+
+  // Tax credit: apply same brackets to personal minimum
+  const pm = PERSONAL_MIN[situation] || 5550;
+  let pmTax = 0;
+  let pmPrev = 0;
+  for (const b of IRPF_BRACKETS) {
+    if (pm <= pmPrev) break;
+    const chunk = Math.min(pm, b.up) - pmPrev;
+    pmTax += chunk * b.rate;
+    pmPrev = b.up;
+  }
+
+  let irpf = Math.max(0, tax - pmTax);
+
+  // Regional adjustment
+  const adj = CCAA_ADJ[ccaa] || 0;
+  irpf = irpf * (1 + adj);
+
+  return Math.max(0, irpf);
+}
+
+function applyBrackets(amount) {
+  const rows = [];
+  let prev = 0;
+  let remaining = amount;
+  for (const b of IRPF_BRACKETS) {
+    if (remaining <= 0) break;
+    const size = Math.min(remaining, b.up - prev);
+    const tax = size * b.rate;
+    rows.push({ from: prev, to: Math.min(amount, b.up), size, rate: b.rate, tax, active: size > 0 });
+    remaining -= size;
+    prev = b.up;
+  }
+  return rows;
+}
+
+/* ─────────────────────────────────────────────
+   FORMAT HELPERS
+───────────────────────────────────────────── */
+function fmt(n) {
+  return n.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €';
+}
+function fmtPct(n) {
+  return (n * 100).toFixed(1) + '%';
+}
+
+/* ─────────────────────────────────────────────
+   MAIN CALCULATE
+───────────────────────────────────────────── */
+function calculate() {
+  const gross = parseFloat(document.getElementById('salaryInput').value) || 0;
+  const pagas = parseInt(document.getElementById('pagas').value, 10);
+  const sit   = document.getElementById('situacion').value;
+  const ccaa  = document.getElementById('ccaa').value;
+
+  if (gross <= 0) {
+    alert('Por favor, introduce un salario bruto válido.');
+    return;
+  }
+
+  // 1. Social Security
+  const ssBase = Math.max(SS_MIN_BASE, Math.min(gross, SS_MAX_BASE));
+  const ssTotal = ssBase * SS_RATE;
+
+  // 2. Taxable income (rendimiento neto del trabajo)
+  const netWork = gross - ssTotal;
+
+  // 3. Work reduction (reducción rendimientos del trabajo)
+  const workRed = workReduction(netWork);
+
+  // 4. Taxable base (base liquidable general)
+  const taxBase = Math.max(0, netWork - workRed);
+
+  // 5. IRPF
+  const irpf = calcIRPF(taxBase, sit, ccaa);
+
+  // 6. Net
+  const netAnnual = gross - ssTotal - irpf;
+  const netMonthly = netAnnual / pagas;
+  const grossMonthly = gross / pagas;
+
+  const effectiveIRPF = irpf / gross;
+  const effectiveSS   = ssTotal / gross;
+  const effectiveTotal = (irpf + ssTotal) / gross;
+
+  // ── Render summary boxes ──
+  document.getElementById('summaryGrid').innerHTML = `
+    <div class="result-box primary">
+      <div class="amount">${fmt(netMonthly)}</div>
+      <div class="label">Neto mensual (÷${pagas})</div>
+    </div>
+    <div class="result-box secondary">
+      <div class="amount">${fmt(netAnnual)}</div>
+      <div class="label">Neto anual</div>
+    </div>
+    <div class="result-box neutral">
+      <div class="amount">${fmtPct(effectiveTotal)}</div>
+      <div class="label">Retención total</div>
+    </div>
+    <div class="result-box neutral">
+      <div class="amount">${fmtPct(effectiveIRPF)}</div>
+      <div class="label">Tipo efectivo IRPF</div>
+    </div>
+  `;
+
+  // ── Render bar ──
+  const netPct  = (netAnnual / gross * 100).toFixed(1);
+  const irpfPct = (irpf / gross * 100).toFixed(1);
+  const ssPct   = (ssTotal / gross * 100).toFixed(1);
+  document.getElementById('barNet').style.width  = netPct + '%';
+  document.getElementById('barIrpf').style.width = irpfPct + '%';
+  document.getElementById('barSS').style.width   = ssPct + '%';
+  document.getElementById('legNet').textContent  = `Salario neto ${netPct}%`;
+  document.getElementById('legIrpf').textContent = `IRPF ${irpfPct}%`;
+  document.getElementById('legSS').textContent   = `SS ${ssPct}%`;
+
+  // ── Render detail table ──
+  document.getElementById('detailTable').innerHTML = `
+    <thead>
+      <tr>
+        <th>Concepto</th>
+        <th>Anual</th>
+        <th>Mensual (÷${pagas})</th>
+        <th>% Bruto</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="tag income">Ingreso</span> Salario bruto</td>
+        <td>${fmt(gross)}</td>
+        <td>${fmt(grossMonthly)}</td>
+        <td>100%</td>
+      </tr>
+      <tr>
+        <td><span class="tag deduct">Descuento</span> Seguridad Social</td>
+        <td>−${fmt(ssTotal)}</td>
+        <td>−${fmt(ssTotal/pagas)}</td>
+        <td>${fmtPct(effectiveSS)}</td>
+      </tr>
+      <tr>
+        <td><span class="tag deduct">Descuento</span> IRPF estimado</td>
+        <td>−${fmt(irpf)}</td>
+        <td>−${fmt(irpf/pagas)}</td>
+        <td>${fmtPct(effectiveIRPF)}</td>
+      </tr>
+      <tr class="row-net">
+        <td>✅ Salario neto</td>
+        <td>${fmt(netAnnual)}</td>
+        <td>${fmt(netMonthly)}</td>
+        <td>${fmtPct(netAnnual/gross)}</td>
+      </tr>
+    </tbody>
+  `;
+
+  // ── Render IRPF brackets ──
+  const brackets = applyBrackets(taxBase);
+  let bHtml = `<thead><tr><th>Tramo</th><th>Base en tramo</th><th>Tipo</th><th>Cuota</th></tr></thead><tbody>`;
+  for (const b of brackets) {
+    if (b.size <= 0) continue;
+    const cls = b.active ? 'active-row' : '';
+    const pillCls = b.active ? 'active' : '';
+    bHtml += `<tr class="${cls}">
+      <td>${b.from.toLocaleString('es-ES')} – ${b.to === Infinity ? '∞' : b.to.toLocaleString('es-ES')} €</td>
+      <td>${fmt(b.size)}</td>
+      <td><span class="rate-pill ${pillCls}">${(b.rate*100).toFixed(0)}%</span></td>
+      <td>${fmt(b.tax)}</td>
+    </tr>`;
+  }
+  bHtml += `<tr class="row-total"><td colspan="3">Base liquidable gravada</td><td>${fmt(taxBase)}</td></tr></tbody>`;
+  document.getElementById('bracketsTable').innerHTML = bHtml;
+
+  // Show results
+  const rs = document.getElementById('resultsSection');
+  rs.classList.add('visible');
+  rs.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+/* ─────────────────────────────────────────────
+   SLIDER ↔ INPUT SYNC
+───────────────────────────────────────────── */
+const slider = document.getElementById('salaryRange');
+const input  = document.getElementById('salaryInput');
+const label  = document.getElementById('rangeLabel');
+
+function updateLabel(v) {
+  label.textContent = Math.round(v).toLocaleString('es-ES') + ' €';
+}
+
+slider.addEventListener('input', () => {
+  input.value = slider.value;
+  updateLabel(slider.value);
+});
+
+input.addEventListener('input', () => {
+  const v = parseFloat(input.value) || 0;
+  slider.value = Math.max(12000, Math.min(150000, v));
+  updateLabel(v);
+});
+
+// Auto-calculate on any change
+['change', 'input'].forEach(evt => {
+  document.getElementById('pagas').addEventListener(evt, calculate);
+  document.getElementById('situacion').addEventListener(evt, calculate);
+  document.getElementById('ccaa').addEventListener(evt, calculate);
+});
+input.addEventListener('change', calculate);
+slider.addEventListener('change', calculate);
+
+// Initial calculation on page load
+calculate();
+</script>
+</body>
+</html>
