@@ -2,7 +2,7 @@
 
 > **Apps and AI for civic service and public service at the highest level.**
 
-Presidencia25 is the open-source home of technology initiatives built by and for the Mexican Presidency. We design, develop, and release tools that make government more accessible, transparent, and effective for every citizen.
+We design, develop, and release tools that make government more accessible, transparent, and effective for every citizen and public servant.
 
 ---
 
@@ -13,7 +13,7 @@ Build world-class **apps and artificial-intelligence solutions** that:
 - Strengthen civic participation and direct communication between government and citizens
 - Automate and improve the quality of public services
 - Make government data open, interpretable, and actionable
-- Raise the standard of digital public infrastructure in Mexico
+- Raise the standard of digital public infrastructure
 
 ---
 
